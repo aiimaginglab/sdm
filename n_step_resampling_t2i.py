@@ -151,9 +151,6 @@ def main(args):
         logger.info(f"Successfully saved plot to: {os.path.join(save_dir, 'eta_value.png')}")
 
     if args.n_step_resampling:
-        # save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.exp}")
-        # os.makedirs(save_dir, exist_ok=True)
-
         # N-step resampling based on cumulative eta values
         resampled_sigmas_sdm = resample_sigmas_uniform_cum_eta(optimized_sigmas, eta_log, num_steps=args.resampled_num_steps, power=args.power, q=args.q)
         np.save(os.path.join(save_dir, f"optimized_schedules_{args.dataset_name}_{args.discretization}_steps_{args.resampled_num_steps}.npy"), resampled_sigmas_sdm)
@@ -171,7 +168,6 @@ def parse_args():
     parser.add_argument("--channel_size", type=int, default=4, help="number of image channels")
     parser.add_argument("--image_size", type=int, default=512, help="image size")
     parser.add_argument("--downscale_factor", type=int, default=8, help="downscale factor for Stable Diffusion")
-    # parser.add_argument("--root_dir", type=str, default="/workspace/data/coco", help="root directory for COCO dataset")
 
     # schedule 
     parser.add_argument("--num_steps", type=int, default=40, help="number of steps for given schedule")

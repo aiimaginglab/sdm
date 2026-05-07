@@ -2,7 +2,7 @@
 
 # ============== T2I ============== #  
 DATASET="coco"
-DATASET_DIR="/workspace/improved-edm/prompts_t2i/sdxl/prompts.json"
+DATASET_DIR="/workspace/sdm/prompts_t2i/sdxl/prompts.json"
 MODEL_TYPE="sdxl"
 PRETRAINED_MODEL_NAME="stabilityai/stable-diffusion-xl-base-1.0"
 

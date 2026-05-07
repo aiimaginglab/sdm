@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Sampling 
 The SDM framework consists of two core components: **Adaptive Solver** and **Adaptive Scheduling**. You can use them individually or integrate them for optimal performance. 
 
-We provide guidelines for unconditional and conditional generation settigs, but identical procedure can be followed when applying to modern ODE samplers (`dpmsolver_scripts`/`unipc_scripts`), high-resolution synthesis (`edm2_scripts`), and text-to-image generation tasks (`bash_t2i_scripts`).
+We provide guidelines for unconditional and conditional generation settings, but identical procedure can be followed when applying to modern ODE samplers (`dpmsolver_scripts`/`unipc_scripts`), high-resolution synthesis (`edm2_scripts`), and text-to-image generation tasks (`bash_t2i_scripts`).
 
 ### Adaptive Solver 
 The adaptive solver dynamically adjusts solver allocation based on given threshold.

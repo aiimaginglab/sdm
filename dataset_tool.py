@@ -139,12 +139,12 @@ def open_lmdb(lmdb_dir: str, *, max_images: Optional[int]):
 #----------------------------------------------------------------------------
 
 def open_image_parquet(source, *, max_images: Optional[int]):
-    df = pd.read_parquet(source)  # 전체 테이블 로딩됨 (어쩔 수 없음)
+    df = pd.read_parquet(source) 
     max_idx = maybe_min(len(df), max_images)
 
     def iterate_images():
         for idx in range(max_idx):
-            img_bytes = df.iloc[idx]["image"]  # 컬럼명은 실제 파일에 맞게 수정
+            img_bytes = df.iloc[idx]["image"] 
             img = np.array(PIL.Image.open(io.BytesIO(img_bytes)))
             yield dict(img=img, label=df.iloc[idx].get("label"))
     return max_idx, iterate_images()

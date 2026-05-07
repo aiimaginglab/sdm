@@ -8,12 +8,11 @@ ROOT_SAVE_DIR="results/checkpoints"
 IMAGE_SAVE_DIR="results/fid_results/images"
 
 SOLVER="euler" # "euler" / "heun"
-# SAMPLER_NAME="sdm_solver" # "euler_cos" / "heun_cos"
+SAMPLER_NAME="dpm_solver" # "euler_cos" / "heun_cos"
 
-# MODEL_PKL="edm/edm-${DATASET}-64x64-cond-adm.pkl" # "edm/edm-afhqv2-64x64-uncond-vp.pkl" / "edm/edm-afhqv2-64x64-uncond-ve.pkl"
 PRESET="${PRESET:-edm2-img512-s-fid}"
 CHANNEL=3
-IMG=512 # 64
+IMG=512
 
 SIGMA_MIN=0.002
 SIGMA_MAX=80
@@ -25,13 +24,13 @@ SEED=42
 NUM_SAMPLES_SCHEDULE=128
 NUM_SAMPLES_FID=50000
 
-RESAMPLED_NUM_STEPS=32 # 256
+RESAMPLED_NUM_STEPS=32
 POWER=0.5
 
-ETA_MIN="0.1" # "0.001"
-ETA_MAX="1.0" # "0.01"
+ETA_MIN="0.1"
+ETA_MAX="1.0"
 ETA_P="1.0"
-Q="0.1" # "0.25"
+Q="0.1"
 
 
 exp_dir () {
@@ -128,7 +127,6 @@ python n_step_resampling_edm2.py \
 # ======================================= #
 # DPM-Solver++ (2M) 
 # ======================================= #
-# SAMPLER_NAME="dpm_solver" # "euler_cos" / "heun_cos"
 
 # # (5) generate images for FID using the resampled schedule
 # python test_edm2.py \

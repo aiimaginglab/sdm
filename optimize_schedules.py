@@ -20,7 +20,6 @@ def main(args):
     set_seed(args.seed)
     batch_size = args.batch_size
 
-    # has_labels = False
     path_to_pretrained_model = os.path.join(BASE_PATH, "dnnlib/models")
     path_to_dataset = os.path.join(BASE_PATH, "dnnlib/datasets")
 
@@ -31,7 +30,6 @@ def main(args):
 
     c = dnnlib.EasyDict()
     path_to_dataset = os.path.join(path_to_dataset, args.dataset_path)
-    # c.dataset_kwargs = dnnlib.EasyDict(class_name='training.dataset.ImageFolderDataset', path=path_to_dataset, use_labels=False, xflip=False, cache=True)
     c.dataset_kwargs = dnnlib.EasyDict(class_name='training.dataset.ImageFolderDataset', path=path_to_dataset, use_labels=args.has_labels, xflip=False, cache=True)
 
     c.data_loader_kwargs = dnnlib.EasyDict(pin_memory=True, num_workers=1, prefetch_factor=2)

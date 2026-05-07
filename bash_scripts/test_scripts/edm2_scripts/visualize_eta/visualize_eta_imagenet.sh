@@ -10,7 +10,6 @@ IMAGE_SAVE_DIR="results/fid_results/images"
 SOLVER="euler" # "euler" / "heun"
 # SAMPLER_NAME="sdm_solver" # "euler_cos" / "heun_cos"
 
-# MODEL_PKL="edm/edm-${DATASET}-64x64-cond-adm.pkl" # "edm/edm-afhqv2-64x64-uncond-vp.pkl" / "edm/edm-afhqv2-64x64-uncond-ve.pkl"
 PRESET="${PRESET:-edm2-img512-s-fid}"
 CHANNEL=3
 IMG=512 # 64

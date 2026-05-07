@@ -31,7 +31,6 @@ def main(args):
         p, b = np.polyfit(lx, ly, 1)  # y ≈ e^b * x^p
         return {'p': p, 'C': np.exp(b), 'mask': mask}
 
-    # (선택) 극단·라운딩 구간 제외 마스크
     s_min = np.nanmin(sigmas); s_max = np.nanmax(sigmas)
     core = (sigmas > s_min*1.05) & (sigmas < s_max*0.98)
 

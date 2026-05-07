@@ -300,7 +300,6 @@ def compute_score_diffs_once(net, dataset_iterator, sigmas, batch_size, num_repe
         images, labels = next(dataset_iterator)
         images = images.to(device).to(torch.float32) / 127.5 - 1
         labels = labels.to(device)
-        # log_sigmas = np.arange(np.log(min_sigma), np.log(max_sigma), 0.1)
 
         for i in range(len(sigmas)-1):
             left_sigma = sigmas[i]
@@ -341,7 +340,6 @@ def build_cos_sigmas(avg_cum_sum: np.ndarray,
     assert len(sigmas_probe) == len(avg_cum_sum) + 1, "K+1 vs K 길이 불일치"
 
     # 1) Interpolation (t <-> lambda)
-    # time_of_sigma, sigma_of_time = get_time_transforms(discretization, rho)
     time_of_sigma, sigma_of_time = get_time_transforms(discretization=discretization)
     t_vals = time_of_sigma(sigmas_probe[1:])
     f_L2t  = interpolate.PchipInterpolator(x=avg_cum_sum, y=t_vals)   # lambda -> t
