@@ -52,7 +52,6 @@ extract_steps_from_exp () {
     exit 1
   fi
 
-  # 혹시 여러 개 있으면 에러 내고 싶으면:
   local count
   count="$(find "$dir" -maxdepth 1 -type f -name "optimized_schedules_${DATASET}_${DISCRETIZATION}_steps_*.npy" | wc -l | tr -d ' ')"
   if [[ "$count" != "1" ]]; then
@@ -78,7 +77,7 @@ extract_steps_from_exp () {
 # ============== afhqv2 ============== #  
 DATASET="afhqv2"
 
-EXP="${SOLVER}-uncond-vp-iedm-emin-${ETA_MIN}-emax-${ETA_MAX}-p-${ETA_P}-demo"
+EXP="${SOLVER}-uncond-vp-iedm-emin-${ETA_MIN}-emax-${ETA_MAX}-p-${ETA_P}"
 N_STEP_EXP="${EXP}-resampled-${RESAMPLED_NUM_STEPS}-pow-${POWER}-q-${Q}"
 
 # (1) initial eta-based scheduling 

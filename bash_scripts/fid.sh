@@ -1,7 +1,7 @@
 # !/bin/bash
-IMAGES_DIR="results/fid_results/images" # "results/fid_results/images"
+IMAGES_DIR="results/fid_results/images"
 ZIP_DIR="results/fid_results/zip"
-EXP="euler-uncond-vp" # "euler-uncond-vp" # "euler-cos-uncond-vp" "heun-uncond-vp" "heun-cos-uncond-vp" "adaptive-uncond-vp" "adaptive-cos-uncond-vp"
+EXP="dpm-solver-sdm-schedule-uncond-vp" # "euler-uncond-vp" # "euler-cos-uncond-vp" "heun-uncond-vp" "heun-cos-uncond-vp" "adaptive-uncond-vp" "adaptive-cos-uncond-vp"
 
 # ============== afhqv2 ============== #  
 torchrun --standalone --nproc_per_node=1 fid.py calc --images=$IMAGES_DIR/afhqv2/edm/$EXP \
