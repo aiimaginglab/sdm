@@ -16,18 +16,3 @@ results/
 cos_notebooks/
 notebooks/
 *.ipynb 
-
-# ----- non-relevant scripts ----- #
-meanflow_scripts/
-*/hparam_scripts/
-*/test_scripts/test_cifar10_conditional.sh
-
-# ----- non-relevant files ----- #
-Dockerfile
-environment.yml
-train.py
-generate.py
-_test.py
-test_copy.py
-*/sampler_backup.py
-LICENSE.txt

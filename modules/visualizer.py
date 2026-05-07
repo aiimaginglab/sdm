@@ -117,7 +117,7 @@ def fit_powerlaw(x, y, mask_extra=None, min_pts=3):
     return {'p': p, 'C': np.exp(b), 'mask': mask}
 
 def save_images(x: torch.Tensor, output_dir: str, seeds: torch.Tensor | np.ndarray,
-                          subdirs: bool = True):
+                          subdirs: bool = True, is_latent: bool = False):
     """
     generates image output format as the following.
         x: [B, C, H, W], range: [-1, 1]
@@ -128,8 +128,12 @@ def save_images(x: torch.Tensor, output_dir: str, seeds: torch.Tensor | np.ndarr
     os.makedirs(output_dir, exist_ok=True)
     B, C, H, W = x.shape
     # (images * 127.5 + 128).clip(0,255).uint8  with images in [-1,1]
-    images_u8 = (x.clamp(-1, 1) * 127.5 + 128).round().clamp(0, 255).to(torch.uint8)
-    images_np = images_u8.permute(0, 2, 3, 1).cpu().numpy()  # [B, H, W, C]
+
+    if is_latent:
+        images_np = x.permute(0, 2, 3, 1).cpu().numpy()  # [B, H, W, C]
+    else:
+        images_u8 = (x.clamp(-1, 1) * 127.5 + 128).round().clamp(0, 255).to(torch.uint8)
+        images_np = images_u8.permute(0, 2, 3, 1).cpu().numpy()  # [B, H, W, C]
 
     seeds = np.asarray(seeds, dtype=np.int64)
     for seed, image_np in zip(seeds, images_np):
@@ -140,3 +144,67 @@ def save_images(x: torch.Tensor, output_dir: str, seeds: torch.Tensor | np.ndarr
             PIL.Image.fromarray(image_np[:, :, 0], 'L').save(image_path)
         else:
             PIL.Image.fromarray(image_np, 'RGB').save(image_path)
+
+def save_coco_images(
+    x: torch.Tensor,
+    output_dir: str,
+    seeds: torch.Tensor | np.ndarray | None = None,
+    file_names: list[str] | None = None,
+    subdirs: bool = True,
+):
+    """
+    Save images.
+
+    Args:
+        x: [B, C, H, W], range [-1, 1]
+        output_dir: output directory
+        seeds: [B], optional. Used for seed-based naming and/or subdir bucketing.
+        file_names: list[str], optional. Used for file-name-based naming.
+                    Example: COCO_val2014_000000123456.jpg
+                    Saved as: COCO_val2014_000000123456.png
+        subdirs: if True, save folder by 1000 images
+
+    Supported modes:
+        1) seeds only
+        2) file_names + seeds   <- recommended for COCO eval
+    """
+    os.makedirs(output_dir, exist_ok=True)
+
+    if seeds is None and file_names is None:
+        raise ValueError("Provide at least one of `seeds` or `file_names`.")
+
+    B, C, H, W = x.shape
+    images_u8 = (x.clamp(-1, 1) * 127.5 + 128).round().clamp(0, 255).to(torch.uint8)
+    images_np = images_u8.permute(0, 2, 3, 1).cpu().numpy()
+
+    if seeds is not None:
+        seeds = np.asarray(seeds, dtype=np.int64)
+        if len(seeds) != B:
+            raise ValueError(f"len(seeds)={len(seeds)} does not match batch size={B}")
+
+    if file_names is not None and len(file_names) != B:
+        raise ValueError(f"len(file_names)={len(file_names)} does not match batch size={B}")
+
+    for i, image_np in enumerate(images_np):
+        if file_names is not None:
+            stem = os.path.splitext(os.path.basename(file_names[i]))[0]
+            out_name = f"{stem}.png"
+        else:
+            out_name = f"{int(seeds[i]):06d}.png"
+
+        if subdirs:
+            if seeds is not None:
+                bucket = int(seeds[i]) - int(seeds[i]) % 1000
+            else:
+                bucket = i - i % 1000
+            image_dir = os.path.join(output_dir, f"{bucket:06d}")
+        else:
+            image_dir = output_dir
+
+        os.makedirs(image_dir, exist_ok=True)
+        image_path = os.path.join(image_dir, out_name)
+
+        if image_np.shape[2] == 1:
+            PIL.Image.fromarray(image_np[:, :, 0], "L").save(image_path)
+        else:
+            PIL.Image.fromarray(image_np, "RGB").save(image_path)

@@ -17,17 +17,16 @@ pip install -r requirements.txt
 ```
 
 ## Sampling 
-The SDM framework consists of two core components: **Adaptive Solver** and **Adaptive Scheduling**. You can use them individually or integrate them for optimal performance.
+The SDM framework consists of two core components: **Adaptive Solver** and **Adaptive Scheduling**. You can use them individually or integrate them for optimal performance. We provide guidelines for unconditional and conditional generation settigs, but identical procedure can be followed when applying to modern ODE samplers (`dpmsolver_scripts`/`unipc_scripts`), high-resolution synthesis (`edm2_scripts`), and text-to-image generation tasks (`bash_t2i_scripts`).
 
 ### Adaptive Solver 
-The adaptive solver dynamically adjusts solver allocation based on the chosen lambda schedule. We provide three scheduling functions: `step`, `linear`, and `cosine`.
+The adaptive solver dynamically adjusts solver allocation based on given threshold.
 
 Edit `bash_scripts/test_scripts/test_afhqv2.sh` with your desired configuration:
 
 ```.bash
 # test_afhqv2.sh
 
-# lambda function - step
 SCHEDULE="step"
 TAUK=1e-4
 python test.py \
@@ -37,30 +36,6 @@ python test.py \
     --num_steps 40 --discretization edm --sigma_min 0.002 --sigma_max 80 --rho 7.0 \
     --sampler_name sdm_solver --save_dir $SAVE_DIR --num_samples 50000 \
     --tau_k $TAUK --lambda_schedule $SCHEDULE \
-    --save_images \
-    --seed 42
-
-# lambda function - linear
-SCHEDULE="linear"
-    python test.py \
-    --exp $EXP --dataset_name afhqv2 --batch_size 128 \
-    --model_weights_pkl edm/edm-afhqv2-64x64-uncond-vp.pkl \
-    --channel_size 3 --image_size 64 \
-    --num_steps 40 --discretization edm --sigma_min 0.002 --sigma_max 80 --rho 7.0 \
-    --sampler_name sdm_solver --save_dir $SAVE_DIR --num_samples 50000 \
-    --lambda_schedule $SCHEDULE \
-    --save_images \
-    --seed 42
-
-# lambda function - cosine
-SCHEDULE="cosine"
-python test.py \
-    --exp $EXP --dataset_name afhqv2 --batch_size 128 \
-    --model_weights_pkl edm/edm-afhqv2-64x64-uncond-vp.pkl \
-    --channel_size 3 --image_size 64 \
-    --num_steps 40 --discretization edm --sigma_min 0.002 --sigma_max 80 --rho 7.0 \
-    --sampler_name sdm_solver --save_dir $SAVE_DIR --num_samples 50000 \
-    --lambda_schedule $SCHEDULE \
     --save_images \
     --seed 42
 ```

@@ -20,7 +20,18 @@ def main(args):
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
     set_seed(args.seed)
 
-    logger = set_logger()
+    if args.save_plot:
+        save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.optimized_sigmas_exp}")
+    elif args.n_step_resampling:
+        save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.exp}")
+    os.makedirs(save_dir, exist_ok=True)
+
+    if args.save_plot:
+        logger_path = os.path.join(save_dir, f"logs/save_plot_{args.optimized_sigmas_exp}.log")
+    elif args.n_step_resampling:
+        logger_path = os.path.join(save_dir, f"logs/{args.exp}.log")
+    os.makedirs(os.path.dirname(logger_path), exist_ok=True)
+    logger = set_logger(logger_path)
 
     path_to_pretrained_model = os.path.join(BASE_PATH, "dnnlib/models")
 
@@ -84,8 +95,8 @@ def main(args):
     eta_log = wasserstein_bound_log["eta_log"] 
     
     if args.save_plot:
-        save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.optimized_sigmas_exp}")
-        os.makedirs(save_dir, exist_ok=True)
+        # save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.optimized_sigmas_exp}")
+        # os.makedirs(save_dir, exist_ok=True)
 
         plt.figure(figsize=(7, 4))
         plt.plot(np.arange(len(eta_log)), eta_log, label="eta value")
@@ -100,8 +111,8 @@ def main(args):
         logger.info("Successfully saved plot to:", os.path.join(save_dir, "eta_value.png"))
 
     if args.n_step_resampling:
-        save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.exp}")
-        os.makedirs(save_dir, exist_ok=True)
+        # save_dir = os.path.join(args.save_dir, f"{args.dataset_name}/{args.discretization}/{args.exp}")
+        # os.makedirs(save_dir, exist_ok=True)
 
         # N-step resampling based on cumulative eta values
         resampled_sigmas_iedm = resample_sigmas_uniform_cum_eta(optimized_sigmas_iedm, eta_log, num_steps=args.resampled_num_steps, power=args.power, q=args.q)

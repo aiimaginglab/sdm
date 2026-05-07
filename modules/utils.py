@@ -250,7 +250,10 @@ def build_t_steps_from_sigmas(
 
     sigmas = sigmas.clamp(min=sigma_min, max=sigma_max)
 
-    t_steps = sigma_inv(net.round_sigma(sigmas))
+    if hasattr(net, "round_sigma"):
+        t_steps = sigma_inv(net.round_sigma(sigmas))
+    else:
+        t_steps = sigma_inv(sigmas)
     t_steps = torch.cat([t_steps, torch.zeros_like(t_steps[:1])])
 
     num_steps = t_steps.numel() - 1
@@ -362,7 +365,6 @@ def build_cos_sigmas(avg_cum_sum: np.ndarray,
 
     return optimized_sigmas.astype(np.float32), f_t2L
 
-
 #----------------------------------------------------------------------------
 # utils for adaptive timestep scheduling
 
@@ -455,3 +457,13 @@ def resample_sigmas_uniform_cum_eta(
         optimized_sigmas = np.concatenate([optimized_sigmas, [0.0]])
 
     return optimized_sigmas
+
+#----------------------------------------------------------------------------
+# utils for text-to-image models
+
+def collate_fn_coco(batch):
+    return {
+        "file_names": [x["file_name"] for x in batch],
+        "prompts": [x["prompt"] for x in batch],
+        "negative_prompts": [x["negative_prompt"] for x in batch],
+    }
